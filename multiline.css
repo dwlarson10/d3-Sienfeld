@@ -2,7 +2,7 @@
     max-width: 950px;
     min-width: 304px;
     margin: 0 auto;
-    background-color: #FAF7F7;
+    background-color: #FFF;
 }
 
 .chart-wrapper .inner-wrapper {
@@ -47,7 +47,7 @@
 .chart-wrapper .line {
   fill: none;
   stroke: steelblue;
-  stroke-width: .5px;
+  stroke-width: 1px;
 }
 
 .chart-wrapper .legend  {
@@ -84,15 +84,14 @@
 }
 
 .chart-wrapper .focus circle {
-  fill: crimson;
-  stroke: crimson;
+
   stroke-width: 3px;
   fill-opacity: 50%;
 }
 .chart-wrapper .focus rect {
     fill: lightblue;
     opacity: 0.7;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 .chart-wrapper .focus.line {
     stroke: steelblue;

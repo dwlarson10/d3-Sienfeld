@@ -16,6 +16,8 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
 // So we can pass the x and y as strings when creating the function
     chartObj.xFunct = function(d){return d[xName]};
 
+    chartObj.tooltipFunct = function(d){return d['episode'] + ': ' + d['title']};
+
 // For each yObjs argument, create a yFunction
     function getYFn(column) {
         return function (d) {
@@ -170,7 +172,10 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
         }
 
         // Overlay to capture hover
-        chartObj.svg.append("rect").attr("class", "overlay").attr("width", chartObj.width).attr("height", chartObj.height).on("mouseover", function () {
+        chartObj.svg.append("rect")
+        .attr("class", "overlay")
+        .attr("width", chartObj.width)
+        .attr("height", chartObj.height).on("mouseover", function () {
             focus.style("display", null);
         }).on("mouseout", function () {
             focus.style("display", "none");
@@ -190,7 +195,7 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
             }
 
             focus.select(".focus.line").attr("transform", "translate(" + chartObj.xScale(chartObj.xFunct(d)) + ")").attr("y1", minY);
-            focus.select(".focus.year").text("Episode: " + chartObj.xFormatter(chartObj.xFunct(d)));
+            focus.select(".focus.year").text("Episode: " + chartObj.tooltipFunct(d));
         }
 
     };
