@@ -17,7 +17,7 @@ var selectData = [ { "text" : "anger" },
 
 // Select X-axis Variable
 var span = body.append('span')
-.text('Select X-Axis variable: ')
+.text('Choose an emotion for x-axis: ')
 var yInput = body.append('select')
   .attr('id','xSelect')
   .on('change',xChange)
@@ -31,7 +31,7 @@ body.append('br')
 
 // Select Y-axis Variable
 var span = body.append('span')
-  .text('Select Y-Axis variable: ')
+  .text('Choose an emotion for y-axis:  ')
 var yInput = body.append('select')
   .attr('id','ySelect')
   .on('change',yChange)
@@ -54,14 +54,14 @@ var formatPercent = d3.format('.2%')
 var colorScale = d3.scale.category20()
 var xScale = d3.scale.linear()
 .domain([
-  d3.min([0,d3.min(data,function (d) { return d['postive'] })]),
-  d3.max([0,d3.max(data,function (d) { return d['positive'] })])
+  d3.min([0,d3.min(data,function (d) { return d['joy'] })]),
+  d3.max([0,d3.max(data,function (d) { return d['joy'] })])
   ])
 .range([0,w])
 var yScale = d3.scale.linear()
 .domain([
-  d3.min([0,d3.min(data,function (d) { return d['positive'] })]),
-  d3.max([0,d3.max(data,function (d) { return d['positive'] })])
+  d3.min([0,d3.min(data,function (d) { return d['trust'] })]),
+  d3.max([0,d3.max(data,function (d) { return d['trust'] })])
   ])
 .range([h,0])
 // SVG
@@ -87,12 +87,12 @@ var circles = svg.selectAll('circle')
   .data(data)
   .enter()
 .append('circle')
-  .attr('cx',function (d) { return xScale(d['positive']) })
-  .attr('cy',function (d) { return yScale(d['positive']) })
+  .attr('cx',function (d) { return xScale(d['joy']) })
+  .attr('cy',function (d) { return yScale(d['trust']) })
   .attr('r','5')
   .attr('stroke','black')
   .attr('stroke-width',1)
-  .attr('fill',function (d,i) { return colorScale(i) })
+  .attr('fill',function (d,i) { return colorScale(d['season']) })
   .on('mouseover', function () {
     d3.select(this)
       .transition()
@@ -108,7 +108,8 @@ var circles = svg.selectAll('circle')
       .attr('stroke-width',1)
   })
 .append('title') // Tooltip
-  .text(function (d) {return '\nepisode: '+ d['episode'] + ' '  + d['title']  +
+  .text(function (d) {return 'episode: '+ d['episode'] + ' '  + d['title']  +
+                       '\nSeason: ' + d['season'] +
                        '\nAverage positives: ' + d['positive'] +
                        '\nAverage negative sentiment in lines: ' + d['negative'] +
                        '\nMax Drawdown: ' + d['Maximum Drawdown'] })
@@ -124,7 +125,7 @@ svg.append('g')
   .attr('x',w)
   .attr('dy','.71em')
   .style('text-anchor','end')
-  .text('positive')
+  .text('joy')
 // Y-axis
 svg.append('g')
   .attr('class','axis')
@@ -137,7 +138,7 @@ svg.append('g')
   .attr('y',5)
   .attr('dy','.71em')
   .style('text-anchor','end')
-  .text('positive')
+  .text('trust')
 
 function yChange() {
 var value = this.value // get the new y value
@@ -176,112 +177,5 @@ d3.selectAll('circle') // move the circles
   .transition().duration(1000)
   .delay(function (d,i) { return i*10})
     .attr('cx',function (d) { return xScale(d[value]) })
-}
-render();
-
-function render() {
-
-    //get dimensions based on window size
-    updateDimensions(window.innerWidth);
-
-    //update x and y scales to new dimensions
-    x.range([0, width]);
-    y.range([height, 0]);
-
-    touchScale.domain([0,width]).range([0,data.length-1]).clamp(true);
-
-    //update svg elements to new dimensions
-    svg
-      .attr('width', width + margin.right + margin.left)
-      .attr('height', height + margin.top + margin.bottom);
-
-    chartWrapper
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-    //update the axis and line
-    xAxis.scale(x);
-    yAxis.scale(y).orient(window.innerWidth < breakPoint ? 'right' : 'left');
-
-    if(window.innerWidth < breakPoint) {
-      xAxis.ticks(d3.time.month, 2)
-    }
-    else {
-      xAxis.ticks(d3.time.month, 1)
-    }
-
-    svg.select('.x.axis')
-      .attr('transform', 'translate(0,' + height + ')')
-      .call(xAxis);
-
-    svg.select('.y.axis')
-      .call(yAxis);
-
-    path.attr('d', line);
-    renderLabels();
   }
-
-  var labels = [
-    {
-      x: new Date('03-15-2014'),
-      y: .17,
-      text: 'Test Label 1',
-      orient: 'right'
-    },
-    {
-      x: new Date('11-20-2014'),
-      y: .24,
-      text: 'Test Label 2',
-      orient: 'left'
-    }
-  ]
-
-  function renderLabels() {
-
-    var _labels = chartWrapper.selectAll('text.label');
-
-    if(_labels[0].length > 0) {
-      //labels already exist
-      _labels
-        .attr('x', function(d) { return x(d.x) })
-        .attr('y', function(d) { return y(d.y) })
-    }
-    else {
-      //append labels if function is called for the first time
-      _labels
-        .data(labels)
-        .enter()
-        .append('text')
-        .classed('label', true)
-        .attr('x', function(d) { return x(d.x) })
-        .attr('y', function(d) { return y(d.y) })
-        .style('text-anchor', function(d) { return d.orient == 'right' ? 'start' : 'end' })
-        .text(function(d) { return d.text });
-    }
-  }
-
-  function updateDimensions(winWidth) {
-    margin.top = 20;
-    margin.right = winWidth < breakPoint ? 0 : 50;
-    margin.left = winWidth < breakPoint ? 0 : 50;
-    margin.bottom = 50;
-
-    width = winWidth - margin.left - margin.right;
-    height = .7 * width;
-  }
-
-  function onTouchMove() {
-    var xPos = d3.touches(this)[0][0];
-    var d = data[~~touchScale(xPos)];
-
-    locator.attr({
-      cx : x(new Date(d.date)),
-      cy : y(d.value)
-    })
-    .style('display', 'block');
-  }
-
-  return {
-    render : render
-  }
-
-});
+})
