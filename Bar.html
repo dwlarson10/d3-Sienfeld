@@ -27,8 +27,8 @@
 <script>
 
 var margin = {top: 80, right: 180, bottom: 80, left: 180},
-    width = 960 - margin.left - margin.right,
-    height = 960 - margin.top - margin.bottom;
+    width = window.innerWidth  - margin.left - margin.right,
+    height = 1.4 * width - margin.top  - margin.top - margin.bottom;
 
 var svg = d3.select("body").append("svg")
 	.attr("width", width + margin.left + margin.right)
@@ -144,6 +144,7 @@ d3.tsv("characters.tsv", function(error, data){
       .text(function(d){
         return d;
       })
+
 
 
 

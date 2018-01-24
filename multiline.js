@@ -11,7 +11,7 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
     chartObj.data = dataset;
     chartObj.margin = {top: 15, right: 60, bottom: 30, left: 50};
     chartObj.width = 650 - chartObj.margin.left - chartObj.margin.right;
-    chartObj.height = 480 - chartObj.margin.top - chartObj.margin.bottom;
+    chartObj.height = 550 - chartObj.margin.top - chartObj.margin.bottom;
 
 // So we can pass the x and y as strings when creating the function
     chartObj.xFunct = function(d){return d[xName]};
@@ -152,8 +152,8 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
 
         for (var y  in yObjs) {
             yObjs[y].tooltip = focus.append("g");
-            yObjs[y].tooltip.append("circle").attr("r", 5);
-            yObjs[y].tooltip.append("rect").attr("x", 8).attr("y","-5").attr("width",22).attr("height",'0.75em');
+            yObjs[y].tooltip.append("circle").attr("r", 5).style("fill",color(y));
+            yObjs[y].tooltip.append("rect").attr("x", 8).attr("y","-5").attr("width",50).attr("height",'0.75em');
             yObjs[y].tooltip.append("text").attr("x", 9).attr("dy", ".35em");
         }
 
