@@ -92,6 +92,7 @@ var circles = svg.selectAll('circle')
   .attr('r','5')
   .attr('stroke','black')
   .attr('stroke-width',1)
+  .attr("data-legend",function(d) { return colorScale(d['season'])})
   .attr('fill',function (d,i) { return colorScale(d['season']) })
   .on('mouseover', function () {
     d3.select(this)
@@ -110,9 +111,8 @@ var circles = svg.selectAll('circle')
 .append('title') // Tooltip
   .text(function (d) {return 'episode: '+ d['episode'] + ' '  + d['title']  +
                        '\nSeason: ' + d['season'] +
-                       '\nAverage positives: ' + d['positive'] +
-                       '\nAverage negative sentiment in lines: ' + d['negative'] +
-                       '\nMax Drawdown: ' + d['Maximum Drawdown'] })
+                       '\nCharacter with highest of x ' + 'data coming'
+                       '\nCharacter with highest of y' + 'data coming' })
 // X-axis
 svg.append('g')
   .attr('class','axis')
@@ -139,6 +139,12 @@ svg.append('g')
   .attr('dy','.71em')
   .style('text-anchor','end')
   .text('trust')
+
+svg.append("g")
+    .attr("class","legend")
+    .attr("transform","translate(50,30)")
+    .style("font-size","12px")
+    .call(d3.legend)
 
 function yChange() {
 var value = this.value // get the new y value

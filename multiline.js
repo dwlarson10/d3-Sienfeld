@@ -163,7 +163,17 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
         focus.append("line").attr("class", "focus line").attr("y1", 0).attr("y2", chartObj.height);
 
         //Draw legend
-        var legend = chartObj.mainDiv.append('div').attr("class", "legend");
+        var legend = chartObj.mainDiv.append('div').attr("class", "legend")
+                                        .on("click",function(){
+                                          var active = d.active ? false : true,  // ************
+                                          newOpacity = active ? 0 : 1;             // ************
+                                          // Hide or show the elements based on the ID
+                                          d3.select("#tag"+d.key.replace(/\s+/g, '')) // *********
+                                          .transition().duration(100)          // ************
+                                          .style("opacity", newOpacity);       // ************
+                                          // Update whether or not the elements are active
+                                          d.active = active;                       // ************
+                                          });
         for (var y  in yObjs) {
             series = legend.append('div');
             series.append('div').attr("class", "series-marker").style("background-color", color(y));
