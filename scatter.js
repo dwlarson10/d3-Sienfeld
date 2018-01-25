@@ -92,7 +92,6 @@ var circles = svg.selectAll('circle')
   .attr('r','5')
   .attr('stroke','black')
   .attr('stroke-width',1)
-  .attr("data-legend",function(d) { return colorScale(d['season'])})
   .attr('fill',function (d,i) { return colorScale(d['season']) })
   .on('mouseover', function () {
     d3.select(this)
