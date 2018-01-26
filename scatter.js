@@ -95,10 +95,7 @@ var circles = svg.selectAll('circle')
   .attr('r','5')
   .attr('stroke','black')
   .attr('stroke-width',1)
-<<<<<<< HEAD
   .attr("data-legend",function(d) { return "Season: " + d.season})
-=======
->>>>>>> origin/master
   .attr('fill',function (d,i) { return colorScale(d['season']) })
   .on('mouseover', function () {
     d3.select(this)
@@ -146,16 +143,14 @@ svg.append('g')
   .style('text-anchor','end')
   .text('trust')
 
-<<<<<<< HEAD
+
 svg.append("g")
     .attr("class","legend")
     .attr("transform","translate(50,30)")
     .attr("data-legend-pos","season")
     .style("font-size","12px")
     .call(d3.legend)
-=======
 
->>>>>>> origin/master
 
 function yChange() {
 var value = this.value // get the new y value
