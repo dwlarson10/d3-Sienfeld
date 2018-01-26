@@ -17,7 +17,7 @@ var selectData = [ { "text" : "anger" },
 
 // Select X-axis Variable
 var span = body.append('span')
-.text('Choose an emotion for x-axis: ')
+.text('Choose an emotion for x-axis?: ')
 var yInput = body.append('select')
   .attr('id','xSelect')
   .on('change',xChange)
