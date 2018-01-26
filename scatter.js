@@ -82,6 +82,9 @@ var yAxis = d3.svg.axis()
 //.tickFormat(formatPercent)
 .ticks(5)
 .orient('left')
+
+
+
 // Circles
 var circles = svg.selectAll('circle')
   .data(data)
@@ -92,7 +95,7 @@ var circles = svg.selectAll('circle')
   .attr('r','5')
   .attr('stroke','black')
   .attr('stroke-width',1)
-  .attr("data-legend",function(d) { return colorScale(d['season'])})
+  .attr("data-legend",function(d) { return "Season: " + d.season})
   .attr('fill',function (d,i) { return colorScale(d['season']) })
   .on('mouseover', function () {
     d3.select(this)
@@ -143,6 +146,7 @@ svg.append('g')
 svg.append("g")
     .attr("class","legend")
     .attr("transform","translate(50,30)")
+    .attr("data-legend-pos","season")
     .style("font-size","12px")
     .call(d3.legend)
 
@@ -162,7 +166,14 @@ d3.select('#yAxisLabel') // change the yAxisLabel
 d3.selectAll('circle') // move the circles
   .transition().duration(1000)
   .delay(function (d,i) { return i*10})
-    .attr('cy',function (d) { return yScale(d[value]) })
+    .attr('cy',function (d) { return yScale(d[value])
+    .attr("data-legend",function(d) { return "Season: " + d.season}) })
+
+    d3.append("g")
+        .attr("class","legend")
+        .attr("transform","translate(50,30)")
+        .style("font-size","12px")
+        .call(d3.legend)
 }
 
 function xChange() {

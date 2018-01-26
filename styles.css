@@ -29,3 +29,7 @@ label {
   top: 10px;
   right: 10px;
 }
+
+.legend rect {
+  fill:white;
+  opacity:0.8;}

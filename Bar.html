@@ -2,17 +2,15 @@
 <meta charset="utf-8">
 <head>
 <style>
-
 .rectangle {
-	fill: steelblue;
+	fill: #3e3e3e;
 }
 .rectangle:hover {
-	fill: orange;
+	fill: #DF2D2B;
 }
 .axis {
   font: 10px sans-serif;
 }
-
 .axis path,
 .axis line {
   fill: none;
@@ -22,22 +20,20 @@
 </style>
 </head>
 <body>
+	<button id="sort" onclick="sortBars()">Sort</button>
+	 <button id="reset" onclick="reset()">Reset</button>
 <div id="drop" align=center></div>
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script>
-
 var margin = {top: 80, right: 180, bottom: 80, left: 180},
     width = window.innerWidth  - margin.left - margin.right,
     height = 1.4 * width - margin.top  - margin.top - margin.bottom;
-
 var svg = d3.select("body").append("svg")
 	.attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
 	.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
 d3.tsv("characters.tsv", function(error, data){
-
 	// filter year
 	//var data = data.filter(function(d){return d.Year == '2012';});
 	// Get every column value
@@ -46,27 +42,21 @@ d3.tsv("characters.tsv", function(error, data){
 			return ((d != "speaker"));
 		});
 	var selection = elements[0];
-
 	var x = d3.scale.linear()
 			.domain([0,d3.max(data, function(d){
 				return +d[selection];
 			})])
 			.range([0,width]);
-
 	var y = d3.scale.ordinal()
       .rangeBands([0,height],.1)
 			.domain(data.map(function(d){ return d.speaker;}))
 			;
-
-
   var xAxis = d3.svg.axis()
 		.scale(x)
 	    .orient("bottom");
-
 	var yAxis = d3.svg.axis()
 		 .scale(y)
 	    .orient("left");
-
 	svg.append("g")
     	.attr("class", "y axis")
     	//.attr("transform", "translate(0," + height + ")")
@@ -77,15 +67,12 @@ d3.tsv("characters.tsv", function(error, data){
       	//.attr("dy", ".8em")
       	.attr("dx", "-.55em")
       	//.attr("transform", "rotate(-90)" );
-
-
  	svg.append("g")
     	.attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
     	.call(xAxis);
-
 	svg.selectAll("rectangle")
-		.data(data.sort(function(a, b){return b-a}))
+		.data(data)
 		.enter()
 		.append("rect")
 		.attr("class","rectangle")
@@ -101,19 +88,14 @@ d3.tsv("characters.tsv", function(error, data){
 		.text(function(d){
 			return d.speaker + " : " + d[selection];
 		});
-
-
 	var selector = d3.select("#drop")
     	.append("select")
     	.attr("id","dropdown")
     	.on("change", function(d){
         	selection = document.getElementById("dropdown");
-
         	x.domain([0, d3.max(data, function(d){
 				return +d[selection.value];})]);
-
         	xAxis.scale(x);
-
         	d3.selectAll(".rectangle")
            		.transition()
 	            .attr("width", function(d){
@@ -128,13 +110,10 @@ d3.tsv("characters.tsv", function(error, data){
            		.text(function(d){
            			return d.speaker + " : " + d[selection.value];
            		});
-
            	d3.selectAll("g.x.axis")
            		.transition()
            		.call(xAxis);
-
          });
-
     selector.selectAll("option")
       .data(elements)
       .enter().append("option")
@@ -145,7 +124,118 @@ d3.tsv("characters.tsv", function(error, data){
         return d;
       })
 
+			var sortOrder = false;
+			var sortBars = function () {
+			    sortOrder = !sortOrder;
 
+			    sortItems = function (a, b) {
+			        if (sortOrder) {
+			            return a.value - b.value;
+			        }
+			        return b.value - a.value;
+			    };
+
+			    svg.selectAll("rectangle")
+			        .sort(sortItems)
+			        .transition()
+			        .delay(function (d, i) {
+			        return i * 50;
+			    })
+			        .duration(1000)
+			        .attr("y", function (d, i) {
+			        return y(i);
+			    });
+
+			    svg.selectAll('text')
+			        .sort(sortItems)
+			        .transition()
+			        .delay(function (d, i) {
+			        return i * 50;
+			    })
+			        .duration(1000)
+			        .text(function (d) {
+			        return d.value;
+			    })
+			        .attr("text-anchor", "middle")
+			        .attr("y", function (d, i) {
+			        return y(i) + y.rangeBand() / 2;
+			    })
+			        .attr("x", function (d) {
+			        return w - x(d.value);
+			    });
+			};
+			// Add the onclick callback to the button
+
+			d3.select("#sort").on("click", sortBars);
+			d3.select("#reset").on("click", reset);
+			function randomSort() {
+
+
+			 svg.selectAll("rectangle")
+			        .sort(sortItems)
+			        .transition()
+			        .delay(function (d, i) {
+			        return i * 50;
+			    })
+			        .duration(1000)
+			        .attr("y", function (d, i) {
+			        return y(i);
+			    });
+
+			    svg.selectAll('text')
+			        .sort(sortItems)
+			        .transition()
+			        .delay(function (d, i) {
+			        return i * 50;
+			    })
+			        .duration(1000)
+			        .text(function (d) {
+			        return d.value;
+			    })
+			        .attr("text-anchor", "middle")
+			        .attr("y", function (d, i) {
+			        return y(i) + y.rangeBand() / 2;
+			    })
+			        .attr("x", function (d) {
+			        return w - x(d.value);
+			    });
+			}
+
+			function reset() {
+			 svg.selectAll("rectangle")
+				 .sort(function(a, b){
+					 return a.key - b.key;
+				 })
+				 .transition()
+							.delay(function (d, i) {
+							return i * 50;
+				 })
+							.duration(1000)
+							.attr("y", function (d, i) {
+							return y(i);
+				 });
+
+			 svg.selectAll('text')
+							.sort(function(a, b){
+					 return a.key - b.key;
+				 })
+							.transition()
+							.delay(function (d, i) {
+							return i * 50;
+					})
+							.duration(1000)
+							.text(function (d) {
+							return d.value;
+					})
+							.attr("text-anchor", "middle")
+							.attr("y", function (d, i) {
+							return y(i) + y.rangeBand() / 2;
+					})
+							.attr("x", function (d) {
+							return w - x(d.value);
+					});
+
+};
 
 
 });
