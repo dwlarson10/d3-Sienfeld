@@ -169,7 +169,6 @@ d3.selectAll('circle') // move the circles
   .transition().duration(1000)
   .delay(function (d,i) { return i*10})
     .attr('cy',function (d) { return yScale(d[value])})
-    .attr("data-legend",function(d) { return "Season: " + d.season})
 
 }
 
