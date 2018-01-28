@@ -170,6 +170,13 @@ d3.selectAll('circle') // move the circles
   .delay(function (d,i) { return i*10})
     .attr('cy',function (d) { return yScale(d[value])})
 
+    svg.append("g")
+        .attr("class","legend")
+        .attr("transform","translate(50,30)")
+        .attr("data-legend-pos","season")
+        .style("font-size","12px")
+        .call(d3.legend)
+
 }
 
 function xChange() {
