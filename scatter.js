@@ -47,7 +47,7 @@ body.append('br')
 var body = d3.select('body')
 var margin = { top: 50, right: 50, bottom: 50, left: 50 }
 var w = window.innerWidth - margin.left - margin.right
-var h = .7 * w - margin.top - margin.bottom
+var h =  window.innerHeight - margin.top - margin.bottom
 
 var formatPercent = d3.format('.2%')
 // Scales

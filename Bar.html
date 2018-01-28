@@ -4,9 +4,11 @@
 <style>
 .rectangle {
 	fill: #3e3e3e;
+	stroke: black;
 }
 .rectangle:hover {
 	fill: #DF2D2B;
+	stroke: black;
 }
 .axis {
   font: 10px sans-serif;
@@ -17,17 +19,24 @@
   stroke: #000;
   shape-rendering: crispEdges;
 }
+.y.axis path {
+  display: none;
+}
+
+
 </style>
 </head>
+
 <body>
-	<button id="sort" onclick="sortBars()">Sort</button>
-	 <button id="reset" onclick="reset()">Reset</button>
-<div id="drop" align=center></div>
-<script src="https://d3js.org/d3.v3.min.js"></script>
+	<div id="drop" align=center></div>
+	<label><input type="checkbox"> Sort values</label>
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script>
+
 var margin = {top: 80, right: 180, bottom: 80, left: 180},
     width = window.innerWidth  - margin.left - margin.right,
-    height = 1.4 * width - margin.top  - margin.top - margin.bottom;
+    height = window.innerHeight - margin.top  - margin.top - margin.bottom;
+
 var svg = d3.select("body").append("svg")
 	.attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -39,7 +48,7 @@ d3.tsv("characters.tsv", function(error, data){
 	// Get every column value
 	var elements = Object.keys(data[0])
 		.filter(function(d){
-			return ((d != "speaker"));
+			return ((d != "speaker")& (d != "line"));
 		});
 	var selection = elements[0];
 	var x = d3.scale.linear()
@@ -71,10 +80,13 @@ d3.tsv("characters.tsv", function(error, data){
     	.attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
     	.call(xAxis);
+
+
 	svg.selectAll("rectangle")
 		.data(data)
 		.enter()
 		.append("rect")
+		.on("change",change)
 		.attr("class","rectangle")
 		.attr("height", height/data.length)
 		.attr("width", function(d){
@@ -88,6 +100,7 @@ d3.tsv("characters.tsv", function(error, data){
 		.text(function(d){
 			return d.speaker + " : " + d[selection];
 		});
+
 	var selector = d3.select("#drop")
     	.append("select")
     	.attr("id","dropdown")
@@ -104,7 +117,7 @@ d3.tsv("characters.tsv", function(error, data){
 				.attr("y", function(d, i){
 					return (height / data.length) * i ;
 				})
-				.attr("x", 0)
+			 .attr("x", 0)
            		.ease("linear")
            		.select("title")
            		.text(function(d){
@@ -114,129 +127,51 @@ d3.tsv("characters.tsv", function(error, data){
            		.transition()
            		.call(xAxis);
          });
-    selector.selectAll("option")
-      .data(elements)
-      .enter().append("option")
-      .attr("value", function(d){
-        return d;
-      })
-      .text(function(d){
-        return d;
-      })
-
-			var sortOrder = false;
-			var sortBars = function () {
-			    sortOrder = !sortOrder;
-
-			    sortItems = function (a, b) {
-			        if (sortOrder) {
-			            return a.value - b.value;
-			        }
-			        return b.value - a.value;
-			    };
-
-			    svg.selectAll("rectangle")
-			        .sort(sortItems)
-			        .transition()
-			        .delay(function (d, i) {
-			        return i * 50;
-			    })
-			        .duration(1000)
-			        .attr("y", function (d, i) {
-			        return y(i);
-			    });
-
-			    svg.selectAll('text')
-			        .sort(sortItems)
-			        .transition()
-			        .delay(function (d, i) {
-			        return i * 50;
-			    })
-			        .duration(1000)
-			        .text(function (d) {
-			        return d.value;
-			    })
-			        .attr("text-anchor", "middle")
-			        .attr("y", function (d, i) {
-			        return y(i) + y.rangeBand() / 2;
-			    })
-			        .attr("x", function (d) {
-			        return w - x(d.value);
-			    });
-			};
-			// Add the onclick callback to the button
-
-			d3.select("#sort").on("click", sortBars);
-			d3.select("#reset").on("click", reset);
-			function randomSort() {
 
 
-			 svg.selectAll("rectangle")
-			        .sort(sortItems)
-			        .transition()
-			        .delay(function (d, i) {
-			        return i * 50;
-			    })
-			        .duration(1000)
-			        .attr("y", function (d, i) {
-			        return y(i);
-			    });
 
-			    svg.selectAll('text')
-			        .sort(sortItems)
-			        .transition()
-			        .delay(function (d, i) {
-			        return i * 50;
-			    })
-			        .duration(1000)
-			        .text(function (d) {
-			        return d.value;
-			    })
-			        .attr("text-anchor", "middle")
-			        .attr("y", function (d, i) {
-			        return y(i) + y.rangeBand() / 2;
-			    })
-			        .attr("x", function (d) {
-			        return w - x(d.value);
-			    });
-			}
+			  var sortTimeout = setTimeout(function() {
+			    d3.select("input").property("checked", TRUE).each(change);
+			  }, 100);
 
-			function reset() {
-			 svg.selectAll("rectangle")
-				 .sort(function(a, b){
-					 return a.key - b.key;
+d3.select("input").on("change", change);
+
+			  function change() {
+			    clearTimeout(sortTimeout);
+
+			    // Copy-on-write since tweens are evaluated after a delay.
+			    var y0 = y.domain(data.sort(this.checked
+			        ? function(a, b) { return b[selection.value]- a[selection.value]; }
+			        : function(a, b) { return d3.ascending(a.speaker, b.speaker); })
+			        .map(function(d) { return d.speaker; }))
+			        .copy();
+
+			    svg.selectAll(".rectangle")
+			        .sort(function(a, b) { return y0(a.speaker) - y0(b.speaker); });
+
+			    var transition = svg.transition().duration(750),
+			        delay = function(d, i) { return i * 25; };
+
+			    transition.selectAll(".rectangle")
+			        .delay(delay)
+			        .attr("y", function(d) { return y0(d.speaker); });
+
+			    transition.select(".y.axis")
+			        .call(yAxis)
+			      .selectAll("g")
+			        .delay(delay);
+			  }
+
+
+				selector.selectAll("option")
+				 .data(elements)
+				 .enter().append("option")
+				 .attr("value", function(d){
+					 return d;
 				 })
-				 .transition()
-							.delay(function (d, i) {
-							return i * 50;
+				 .text(function(d){
+					 return d;
 				 })
-							.duration(1000)
-							.attr("y", function (d, i) {
-							return y(i);
-				 });
-
-			 svg.selectAll('text')
-							.sort(function(a, b){
-					 return a.key - b.key;
-				 })
-							.transition()
-							.delay(function (d, i) {
-							return i * 50;
-					})
-							.duration(1000)
-							.text(function (d) {
-							return d.value;
-					})
-							.attr("text-anchor", "middle")
-							.attr("y", function (d, i) {
-							return y(i) + y.rangeBand() / 2;
-					})
-							.attr("x", function (d) {
-							return w - x(d.value);
-					});
-
-};
-
 
 });
 
