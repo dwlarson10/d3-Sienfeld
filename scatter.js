@@ -47,7 +47,7 @@ body.append('br')
 var body = d3.select('body')
 var margin = { top: 50, right: 50, bottom: 50, left: 50 }
 var w = window.innerWidth - margin.left - margin.right
-var h =  window.innerHeight - margin.top - margin.bottom
+var h = .7 * w - margin.top - margin.bottom
 
 var formatPercent = d3.format('.2%')
 // Scales
@@ -55,12 +55,12 @@ var colorScale = d3.scale.category20()
 var xScale = d3.scale.linear()
 .domain([
   d3.min([0,d3.min(data,function (d) { return d['joy'] })]),
-  d3.max([0,d3.max(data,function (d) { return d['joy'] })])
+  d3.max([0,d3.max(data,function (d) { return d['trust'] })])
   ])
 .range([0,w])
 var yScale = d3.scale.linear()
 .domain([
-  d3.min([0,d3.min(data,function (d) { return d['trust'] })]),
+  d3.min([0,d3.min(data,function (d) { return d['joy'] })]),
   d3.max([0,d3.max(data,function (d) { return d['trust'] })])
   ])
 .range([h,0])
@@ -168,14 +168,9 @@ d3.select('#yAxisLabel') // change the yAxisLabel
 d3.selectAll('circle') // move the circles
   .transition().duration(1000)
   .delay(function (d,i) { return i*10})
-    .attr('cy',function (d) { return yScale(d[value])
-    .attr("data-legend",function(d) { return "Season: " + d.season}) })
+    .attr('cy',function (d) { return yScale(d[value])})
+    .attr("data-legend",function(d) { return "Season: " + d.season})
 
-    d3.append("g")
-        .attr("class","legend")
-        .attr("transform","translate(50,30)")
-        .style("font-size","12px")
-        .call(d3.legend)
 }
 
 function xChange() {
