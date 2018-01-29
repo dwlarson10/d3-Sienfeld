@@ -98,7 +98,9 @@ d3.tsv("characters.tsv", function(error, data){
 		.attr("x",0)
 		.append("title")
 		.text(function(d){
-			return d.speaker + " : " + d[selection];
+			return d.speaker + " : " + d[selection] +
+							'\n'+ d.speaker + ' was in ' + d.episodes + ' episodes'
+			;
 		});
 
 	var selector = d3.select("#drop")

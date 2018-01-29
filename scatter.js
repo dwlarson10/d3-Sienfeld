@@ -17,7 +17,7 @@ var selectData = [ { "text" : "anger" },
 
 // Select X-axis Variable
 var span = body.append('span')
-.text('Choose an emotion for x-axis?: ')
+.text('Choose an emotion for x-axis: ')
 var yInput = body.append('select')
   .attr('id','xSelect')
   .on('change',xChange)
@@ -49,7 +49,7 @@ var margin = { top: 50, right: 50, bottom: 50, left: 50 }
 var w = window.innerWidth - margin.left - margin.right
 var h = .7 * w - margin.top - margin.bottom
 
-var formatPercent = d3.format('.2%')
+//var formatPercent = d3.format('.2%')
 // Scales
 var colorScale = d3.scale.category20()
 var xScale = d3.scale.linear()
@@ -114,8 +114,7 @@ var circles = svg.selectAll('circle')
 .append('title') // Tooltip
   .text(function (d) {return 'episode: '+ d['episode'] + ' '  + d['title']  +
                        '\nSeason: ' + d['season'] +
-                       '\nCharacter with highest of x ' + 'data coming'
-                       '\nCharacter with highest of y' + 'data coming' })
+                       '\nWriter(s): ' + d['writer']})
 // X-axis
 svg.append('g')
   .attr('class','axis')
