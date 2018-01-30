@@ -45,11 +45,11 @@ body.append('br')
 
 // Variables
 var body = d3.select('body')
-var margin = { top: 50, right: 50, bottom: 50, left: 50 }
+var margin = { top: 20, right: 40, bottom: 40, left:40  }
 var w = window.innerWidth - margin.left - margin.right
 var h = .7 * w - margin.top - margin.bottom
 
-//var formatPercent = d3.format('.2%')
+var formatPercent = d3.format('.2%')
 // Scales
 var colorScale = d3.scale.category20()
 var xScale = d3.scale.linear()

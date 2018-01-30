@@ -14,19 +14,19 @@
 <script type="text/javascript">
     d3.csv('lines.csv', function(error, data) {
     data.forEach(function (d) {
-        d.episode = +d.episode;
-        d.JERRY = +d.JERRY;
-        d.ELAINE = +d.ELAINE;
-        d.GEORGE = +d.GEORGE;
-        d.KRAMER = +d.KRAMER;
+        d.Episode = +d.Episode;
+        d.Jerry = +d.Jerry;
+        d.Elaine = +d.Elaine;
+        d.George = +d.George;
+        d.Kramer = +d.Kramer;
     });
 
-    var chart = makeLineChart(data, 'episode', {
-        'JERRY': {column: 'JERRY'},
-        'ELAINE': {column: 'ELAINE'},
-        'GEORGE': {column: 'GEORGE'},
-        'KRAMER': {column: 'KRAMER'}
-    }, {xAxis: 'episode', yAxis: 'lines'});
+    var chart = makeLineChart(data, 'Episode', {
+        'Jerry': {column: 'Jerry'},
+        'Elaine': {column: 'Elaine'},
+        'George': {column: 'George'},
+        'Kramer': {column: 'Kramer'}
+    }, {xAxis: 'Episode', yAxis: 'Lines'});
     chart.bind("#chart-line1");
     chart.render();
 

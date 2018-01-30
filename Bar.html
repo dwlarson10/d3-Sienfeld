@@ -23,17 +23,16 @@
   display: none;
 }
 
-
 </style>
 </head>
 
 <body>
 	<div id="drop" align=center></div>
-	<label><input type="checkbox"> Sort values</label>
+	<label><input type="checkbox" checked> Sort characters</label>
 <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script>
 
-var margin = {top: 80, right: 180, bottom: 80, left: 180},
+var margin = {top: 40, right: 90, bottom: 80, left: 90},
     width = window.innerWidth  - margin.left - margin.right,
     height = window.innerHeight - margin.top  - margin.top - margin.bottom;
 
@@ -116,6 +115,7 @@ d3.tsv("characters.tsv", function(error, data){
 	            .attr("width", function(d){
 					return x(+d[selection.value]);
 				})
+				d3.selectAll("input").property('checked', false)
 				.attr("y", function(d, i){
 					return (height / data.length) * i ;
 				})
@@ -133,7 +133,7 @@ d3.tsv("characters.tsv", function(error, data){
 
 
 			  var sortTimeout = setTimeout(function() {
-			    d3.select("input").property("checked", TRUE).each(change);
+			    d3.selectAll("input").property("checked", TRUE).each(change);
 			  }, 100);
 
 d3.select("input").on("change", change);
