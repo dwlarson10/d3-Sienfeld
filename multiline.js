@@ -130,11 +130,20 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
 // Render the chart
     chartObj.render = function () {
         //Create SVG element
-        chartObj.svg = chartObj.chartDiv.append("svg").attr("class", "chart-area").attr("width", chartObj.width + (chartObj.margin.left + chartObj.margin.right)).attr("height", chartObj.height + (chartObj.margin.top + chartObj.margin.bottom)).append("g").attr("transform", "translate(" + chartObj.margin.left + "," + chartObj.margin.top + ")");
+        chartObj.svg = chartObj.chartDiv.append("svg")
+        .attr("class", "chart-area")
+        .attr("width", chartObj.width + (chartObj.margin.left + chartObj.margin.right))
+        .attr("height", chartObj.height + (chartObj.margin.top + chartObj.margin.bottom))
+        .append("g").attr("transform", "translate(" + chartObj.margin.left + "," + chartObj.margin.top + ")");
 
         // Draw Lines
         for (var y  in yObjs) {
-            yObjs[y].path = chartObj.svg.append("path").datum(chartObj.data).attr("class", "line").attr("d", yObjs[y].line).style("stroke", color(y)).attr("data-series", y).on("mouseover", function () {
+            yObjs[y].path = chartObj.svg.append("path")
+            .datum(chartObj.data)
+            .attr("class", "line")
+            .attr("d", yObjs[y].line)
+            .style("stroke", color(y)).attr("data-series", y)
+            .on("mouseover", function () {
                 focus.style("display", null);
             }).on("mouseout", function () {
                 focus.transition().delay(700).style("display", "none");
@@ -163,17 +172,9 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
         focus.append("line").attr("class", "focus line").attr("y1", 0).attr("y2", chartObj.height);
 
         //Draw legend
-        var legend = chartObj.mainDiv.append('div').attr("class", "legend")
-                                        .on("click",function(){
-                                          var active = d.active ? false : true,  // ************
-                                          newOpacity = active ? 0 : 1;             // ************
-                                          // Hide or show the elements based on the ID
-                                          d3.select("#tag"+d.key.replace(/\s+/g, '')) // *********
-                                          .transition().duration(100)          // ************
-                                          .style("opacity", newOpacity);       // ************
-                                          // Update whether or not the elements are active
-                                          d.active = active;                       // ************
-                                          });
+        var legend = chartObj.mainDiv.append('div')
+        .attr("class", "legend")
+
         for (var y  in yObjs) {
             series = legend.append('div');
             series.append('div').attr("class", "series-marker").style("background-color", color(y));
@@ -185,7 +186,8 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
         chartObj.svg.append("rect")
         .attr("class", "overlay")
         .attr("width", chartObj.width)
-        .attr("height", chartObj.height).on("mouseover", function () {
+        .attr("height", chartObj.height)
+        .on("mouseover", function () {
             focus.style("display", null);
         }).on("mouseout", function () {
             focus.style("display", "none");
@@ -208,6 +210,5 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
             focus.select(".focus.year").text("Episode: " + chartObj.tooltipFunct(d));
         }
 
-    };
     return chartObj;
 }
