@@ -209,6 +209,6 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
             focus.select(".focus.line").attr("transform", "translate(" + chartObj.xScale(chartObj.xFunct(d)) + ")").attr("y1", minY);
             focus.select(".focus.year").text("Episode: " + chartObj.tooltipFunct(d));
         }
-
+  };
     return chartObj;
-}
+ }
