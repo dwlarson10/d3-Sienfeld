@@ -11,7 +11,7 @@
 	stroke: black;
 }
 .axis {
-  font: 10px sans-serif;
+  font: 12px Calluna;
 }
 .axis path,
 .axis line {
@@ -70,7 +70,7 @@ d3.tsv("characters.tsv", function(error, data){
     	//.attr("transform", "translate(0," + height + ")")
     	.call(yAxis)
     	.selectAll("text")
-    	.style("font-size", "8px")
+    	.style("font-size", "12px")
       	.style("text-anchor", "end")
       	//.attr("dy", ".8em")
       	.attr("dx", "-.55em")
